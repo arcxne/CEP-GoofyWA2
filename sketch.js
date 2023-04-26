@@ -17,7 +17,6 @@ let counter;
 let diameter;
 let changing;
 let alpha;
-let mov;
 
 function setup() {
   //handling canvas size
@@ -49,10 +48,9 @@ function setup() {
   s = 1.2;
   
   counter = 0;
-  diameter = 55;
+  diameter = 60;
   changing = false;
   alpha = 0;
-  mov = 0;
 }
 
 function draw() {
@@ -74,7 +72,8 @@ function draw() {
   push();
   translate(width/2, height/2);
   r+=0.05;
-  s+=0.00005;
+  s = (r-50) / 200 + 1.2;
+  // s+=0.00005;
   rotate(r);
   scale(s);
   for (let p=0;p<bList.length;p++) {
@@ -87,7 +86,7 @@ function draw() {
 
 function mouseWheel(event) {
   diameter += event.deltaY/5;
-  mov = event.deltaY > 5 ? event.deltaY : 0;
+  r -= event.deltaX/10;
   alpha = alpha < 120 ? alpha+3 : 120;
 }
 
