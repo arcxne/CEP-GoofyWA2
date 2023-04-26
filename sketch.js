@@ -21,17 +21,12 @@ let mov;
 
 function setup() {
   //handling canvas size
-  let _width = windowWidth, _height = windowHeight;
-  if (_width>_height) _width = _height;
-  else _height = _width;
-  createCanvas(_width, _height);
+  scaleCanvas();
   
-  pos = []; pos = [];
+  pos = [];
   bList = [];
   
-  for (let a=50;a<width-30;a+=(width-100)/10) {
-    pos.push(a);
-  }
+  for (let a=50;a<width-30;a+=(width-100)/10) pos.push(a-width/2);
   
   angleMode(DEGREES);
   
@@ -42,7 +37,7 @@ function setup() {
     }
   }
   
-  pos = []; pos = [];
+  pos = [];
   
   for (let p=0;p<bList.length;p++) {
     bList[p].drawing();
@@ -51,29 +46,19 @@ function setup() {
   state = 0;
   
   r = 50;
-  s = 1;
+  s = 1.2;
   
   counter = 0;
-  
-  diameter = 50;
-  
+  diameter = 55;
   changing = false;
-  
   alpha = 0;
-
   mov = 0;
 }
 
 function draw() {
-  let _width = windowWidth, _height = windowHeight;
+  scaleCanvas();
 
-  if (_width>_height) _width = _height;
-  else _height = _width;
-
-  createCanvas(_width, _height);
-
-  for (let a=50;a<width-30;a+=(width-100)/10) pos.push(a);
-  for (let b=50;b<height-30;b+=(height-100)/10) pos.push(b);
+  for (let a=50;a<width-30;a+=(width-100)/10) pos.push(a-width/2);
   let num = 0;
 
   for (let i=0;i<11;i++) {
@@ -88,23 +73,29 @@ function draw() {
   background(220);
   push();
   translate(width/2, height/2);
-  r+=10;
-  s+=0.05;
+  r+=0.05;
+  s+=0.00005;
   rotate(r);
   scale(s);
-  pop();
   for (let p=0;p<bList.length;p++) {
     bList[p].jiggle();
   }
-  //b.randomov();
-  //pop();
+  pop();
+  
   overlay();
 }
 
 function mouseWheel(event) {
-  diameter += event.delta/5;
-  mov = event.delta > 5 ? event.delta : 0;
+  diameter += event.deltaY/5;
+  mov = event.deltaY > 5 ? event.deltaY : 0;
   alpha = alpha < 120 ? alpha+3 : 120;
+}
+
+function scaleCanvas() {
+  let _width = windowWidth, _height = windowHeight;
+  if (_width>_height) _width = _height;
+  else _height = _width;
+  createCanvas(_width, _height);
 }
 
 function overlay() {
@@ -112,7 +103,4 @@ function overlay() {
   noStroke();
   rect(0, 0, width, height);
   alpha = alpha > 0 ? (alpha-1)/1.1 : 0;
-  // if (changing && alpha!= 60) alpha+=3;
-  // else if (changing && alpha == 60) changing = false;
-  // else if (!changing && alpha != 0) alpha-=6;
 }
