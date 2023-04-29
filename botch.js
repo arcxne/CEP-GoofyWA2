@@ -4,7 +4,7 @@ class Botch {
     this.r = random(180, 255);
     this.g = random(0, 60);
     this.b = random(0, 90); // 1 list
-    this.d = 70;
+    this.d = 2;
     this.p = [[]];
     this.cx = []; this.cy = []; // 1 list
     this.pr = []; this.pg = []; this.pb = []; this.pa = []; // 1 list
