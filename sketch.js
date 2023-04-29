@@ -114,10 +114,11 @@ function sineCircle() {
 
   let radius = width*6/11;
 
-  fill(190, 40, 40, 50);
+  fill('#cb2e3114');
+
   beginShape();
   for (let i=0; i<=360; i++) {
-    let l = (radius + radius/3 + 15*sin(i*9 + change));
+    let l = radius + radius/11 + 10*sin(i*15 + change);
     let x = l * cos(i);
     let y = l * sin(i);
     curveVertex(x, y);
@@ -126,7 +127,7 @@ function sineCircle() {
 
   beginShape();
   for (let i=0; i<=360; i++) {
-    let l = (radius + 15*sin(i*9 + change*1.5+180));
+    let l = radius + 35*sin(i*6 + change*2+180);
     let x = l * cos(i);
     let y = l * sin(i);
     curveVertex(x, y);
@@ -135,7 +136,7 @@ function sineCircle() {
 
   beginShape();
   for (let i=0; i<=360; i++) {
-    let l = (radius + radius/6 + 15*sin(i*9 + change*2+120));
+    let l = radius + radius/15 + 15*sin(i*9 + change*1.5+120);
     let x = l * cos(i);
     let y = l * sin(i);
     curveVertex(x, y);
