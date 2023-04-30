@@ -1,4 +1,4 @@
-class Botch {
+class Blotch {
   constructor(_x, _y) {
     this.c = createVector(_x, _y);
     this.rgb = [random(180, 255), random(0, 60), random(0, 90)];
