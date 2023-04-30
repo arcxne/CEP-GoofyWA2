@@ -1,62 +1,49 @@
 let pos;
 let bList;
 let r, s, sList;
-let state;
-let counter;
 let diameter;
-let changing;
 let alpha;
-let change = 0;
+let change;
 
 function setup() {
   //handling canvas size
   scaleCanvas();
   
   pos = [];
+  for (let a=0, n=(width-50-20)/50; a<n; a++) {
+    pos.push(a*50+50-width/2);
+  }
+  
   bList = [];
-  
-  for (let a=50;a<width-30;a+=(width-100)/10) pos.push(a-width/2);
-  
-  angleMode(DEGREES);
-  
-  for (let i=0;i<11;i++) {
-    for (let j=0;j<11; j++) {
+  for (let i=0, n=pos.length;i<n;i++) {
+    for (let j=0;j<n; j++) {
       let b = new Botch(pos[i], pos[j]);
       bList.push(b);
     }
   }
-  
-  pos = [];
-  
   for (let p=0;p<bList.length;p++) {
     bList[p].drawing();
   }
   
-  state = 0;
-  
   r = 0;
   sList = [];
   
-  counter = 0;
-  diameter = 20;
-  changing = false;
+  diameter = 27;
   alpha = 0;
   change = 0;
+
+  angleMode(DEGREES);
 }
 
 function draw() {
+  let prevWidth = width;
   scaleCanvas();
 
-  for (let a=50;a<width-30;a+=(width-100)/10) pos.push(a-width/2);
-  let num = 0;
-
-  for (let i=0;i<11;i++) {
-    for (let j=0;j<11; j++) {
-      bList[num].change(pos[i], pos[j], diameter);
-      num++;
-    }
+  for (let i=0, n=bList.length; i<n; i++) {
+    bList[i].x *= width / prevWidth;
+    bList[i].y *= width / prevWidth;
+    bList[i].change(diameter);
   }
-  pos = [];
 
   background(220);
   
@@ -64,10 +51,8 @@ function draw() {
   translate(width/2, height/2);
 
   push();
-
   r += s < 0 ? -0.05 : 0.05;
   s = r / 200 - 0.6;
-  // s+=0.00005;
   rotate(r);
   scale(s);
   for (let p=0;p<bList.length;p++) {
@@ -82,10 +67,11 @@ function draw() {
 }
 
 function mouseWheel(event) {
-  diameter = abs(diameter) < 80 ? diameter + event.deltaY/5 : -diameter/abs(diameter) * 79.99;
+  diameter = abs(diameter) < 60 ? diameter + event.deltaY/5 : -diameter/abs(diameter) * 59.99;
   r -= event.deltaX/10;
   s -= s/abs(s) * event.deltaX/20;
   alpha = alpha < 170 ? alpha+3 : 170;
+  console.log(width, diameter);
 }
 
 function scaleCanvas() {
