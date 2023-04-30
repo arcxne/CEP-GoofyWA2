@@ -9,15 +9,17 @@ function setup() {
   //handling canvas size
   scaleCanvas();
   
+  // get positions of blotches
   pos = [];
   for (let a=0, n=(width-50-20)/50; a<n; a++) {
     pos.push(a*50+50-width/2);
   }
   
+  // draw blotches
   bList = [];
   for (let i=0, n=pos.length;i<n;i++) {
     for (let j=0;j<n; j++) {
-      let b = new Botch(pos[i], pos[j]);
+      let b = new Blotch(pos[i], pos[j]);
       bList.push(b);
     }
   }
@@ -37,36 +39,44 @@ function setup() {
 
 function draw() {
   let prevWidth = width;
+
+  // handling canvas size
   scaleCanvas();
 
+  // changing size and distance of blotches
   for (let i=0, n=bList.length; i<n; i++) {
     bList[i].x *= width / prevWidth;
     bList[i].y *= width / prevWidth;
     bList[i].change(diameter);
-  }
+  }  
 
-  background(220);
-  
   push();
+  // shift origin to centre
   translate(width/2, height/2);
 
   push();
+  //rotation and scaling of visuals
   r += s < 0 ? -0.05 : 0.05;
   s = r / 200 - 0.6;
   rotate(r);
   scale(s);
+
+  // move blotches
   for (let p=0;p<bList.length;p++) {
     bList[p].jiggle();
   }
   pop();
 
+  // draw sineCircle
   sineCircle();
   pop();
 
+  // overlay for scrolling
   overlay();
 }
 
 function mouseWheel(event) {
+  // setting diameter, rotation, scale, and opacity of overlay based on scroll
   diameter = abs(diameter) < 60 ? diameter + event.deltaY/5 : -diameter/abs(diameter) * 59.99;
   r -= event.deltaX/10;
   s -= s/abs(s) * event.deltaX/20;
@@ -75,10 +85,12 @@ function mouseWheel(event) {
 }
 
 function scaleCanvas() {
+  // scale canvas to square
   let _width = windowWidth, _height = windowHeight;
   if (_width>_height) _width = _height;
   else _height = _width;
   createCanvas(_width, _height);
+  background(220);
 }
 
 function overlay() {
