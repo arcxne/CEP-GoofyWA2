@@ -1,7 +1,7 @@
 let pos;
 let bList;
 let r, s, sList;
-let diameter;
+let diameter, maxDiameter;
 let alpha;
 let change;
 
@@ -30,7 +30,7 @@ function setup() {
   r = 0;
   sList = [];
   
-  diameter = 27;
+  diameter = 27; maxDiameter = 60;
   alpha = 0;
   change = 0;
 
@@ -77,11 +77,10 @@ function draw() {
 
 function mouseWheel(event) {
   // setting diameter, rotation, scale, and opacity of overlay based on scroll
-  diameter = abs(diameter) < 60 ? diameter + event.deltaY/5 : -diameter/abs(diameter) * 59.99;
+  diameter = abs(diameter) < maxDiameter ? diameter + event.deltaY/5 : -Math.sign(diameter) * (maxDiameter - 0.01);
   r -= event.deltaX/10;
   s -= s/abs(s) * event.deltaX/20;
   alpha = alpha < 170 ? alpha+3 : 170;
-  console.log(width, diameter);
 }
 
 function scaleCanvas() {
@@ -94,10 +93,18 @@ function scaleCanvas() {
 }
 
 function overlay() {
-  fill(0, alpha);
+  fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
   noStroke();
   rect(0, 0, width, height);
   alpha = alpha > 0 ? (alpha-1)/1.2 : 0;
+
+  if (alpha > 0) {
+    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
+    rect(width*7/8, height*3/4, width/13, height/13*2, 20);
+    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
+    rect(width*7/8, height*3/4 + width/13, width/13, ((diameter))*width/13/60, 0, 0, 20, 20);
+  }
+  console.log(alpha);
 }
 
 function sineCircle() {
