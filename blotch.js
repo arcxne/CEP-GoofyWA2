@@ -6,40 +6,38 @@ class Blotch {
     this.p = [];
     this.prgb = [[], [], []];
     this.tri = [[], []];
-    this.delay = 0;
     this.movMin = 0.5;
     this.movMax = 1.71;
+    this.num = 10;
   }
   
   drawing() {
-    for (let i=0;i<10;i++) {
+    for (let i=0;i<this.num;i++) {
       this.prgb[0].push(this.rgb[0]+random(-10, 20));
       this.prgb[1].push(this.rgb[1]+random(-10, 10));
       this.prgb[2].push(this.rgb[2]+random(-10, 10));
       this.p.push(createVector(random(-10, 10), random(-10, 10)));
-      this.tri[0].push(round(random(0,1),0)); this.tri[1].push(round(random(0,1),0));
-      if (this.tri[0][i]==0) this.tri[0][i] = -1;
-      if (this.tri[1][i]==0) this.tri[1][i] = -1;
+      this.tri[0].push(round(random(0,1),0));
+      this.tri[1].push(round(random(0,1),0));
+      this.tri[0][i] = this.tri[0][i] === 0 ? -1 : this.tri[0][i];
+      this.tri[1][i] = this.tri[1][i] === 0 ? -1 : this.tri[1][i];
     }
   }
   
   jiggle() {
-    fill(this.r, this.g, this.b);
-    noStroke();
+    strokeWeight(7);
+    stroke(0);
     
-    for (let i=0;i<10;i++) {
-      if (this.p[i].x>25) {
-        this.tri[0][i] = -1;
-      } else if (this.p[i].x<-25) {
-        this.tri[0][i] = 1;
+    for (let i = 0; i < this.num; i++) {
+      if (abs(this.p[i].x) > 25) {
+        this.tri[0][i] *= -1;
       }
-      if (this.p[i].y>25) {
-        this.tri[1][i] = -1;
-      } else if (this.p[i].y<-25) {
-        this.tri[1][i] = 1;
+      if (abs(this.p[i].y) > 25) {
+        this.tri[1][i] *= -1;
       }
-    
-      this.p[i].add(random(this.movMin, this.movMax) * this.tri[0][i], random(this.movMin, this.movMax) * this.tri[1][i]);
+      
+      this.p[i].add(random(this.movMin, this.movMax) * this.tri[0][i],
+                    random(this.movMin, this.movMax) * this.tri[1][i]);
 
       this.p[i].x /= 1.05;
       this.p[i].y /= 1.05;
