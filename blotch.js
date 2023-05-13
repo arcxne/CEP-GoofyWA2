@@ -1,3 +1,9 @@
+// link to documentation (I'm pretty sure documentation means 
+// commenting code and not writing a separate document but 
+// I'm lazy to bring over everything from the notion document):
+//
+//https://www.notion.so/Documentation-3332a90821fd4465b813582f88cd248f?pvs=4
+
 class Blotch {
   constructor(_x, _y) {
     this.c = createVector(_x, _y);

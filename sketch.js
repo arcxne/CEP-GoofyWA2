@@ -1,32 +1,31 @@
-let pos;
-let bList;
-let r, s, sList;
-let diameter, maxDiameter;
-let alpha;
-let change;
+let pos;                                      // positions of blotches
+let bList;                                    // list of blotches
+let r;                                        // rotation of blotches
+let s, sList;                                 // scale of canvas
+let diameter, maxDiameter;                    // diameter of blotches
+let alpha;                                    // opacity of overlay
+let change;                                   // change in sineCircle
 
 function setup() {
-  //handling canvas size
-  scaleCanvas();
+  scaleCanvas();                              // handling canvas size
   
-  // get positions of blotches
   pos = [];
   for (let a=0, n=(width-50-20)/50; a<n; a++) {
-    pos.push(a*50+50-width/2);
+    pos.push(a*50+50-width/2);                // get positions of blotches
   }
   
-  // draw blotches
   bList = [];
   for (let i=0, n=pos.length;i<n;i++) {
     for (let j=0;j<n; j++) {
       let b = new Blotch(pos[i], pos[j]);
-      bList.push(b);
+      bList.push(b);                          // create blotches
     }
   }
   for (let p=0;p<bList.length;p++) {
-    bList[p].drawing();
+    bList[p].drawing();                       // draw blotches
   }
   
+  // setting up variables
   r = 0;
   sList = [];
   
@@ -34,57 +33,50 @@ function setup() {
   alpha = 0;
   change = 0;
 
+  // degree mode
   angleMode(DEGREES);
 }
 
 function draw() {
   let prevWidth = width;
 
-  // handling canvas size
-  scaleCanvas();
+  scaleCanvas();                              // handling canvas size
 
-  // changing size and distance of blotches
-  for (let i=0, n=bList.length; i<n; i++) {
-    bList[i].x *= width / prevWidth;
+  for (let i=0, n=bList.length; i<n; i++) {   // changing size and distance of blotches
+    bList[i].x *= width / prevWidth;          // based on canvas
     bList[i].y *= width / prevWidth;
     bList[i].change(diameter);
   }  
 
   push();
-  // shift origin to centre
-  translate(width/2, height/2);
-
-  push();
-  //rotation and scaling of visuals
-  r += s < 0 ? -0.05 : 0.05;
-  s = r / 200 - 0.6;
+  translate(width/2, height/2);               // shift origin to centre
+  push();                                     // rotation and scaling of visuals
+  
+  r += s < 0 ? -0.05 : 0.05;                  // direction of rotation based on scale
+  s = r / 200 - 0.6;                          // based on rotation of canvas
   rotate(r);
   scale(s);
 
-  // move blotches
   for (let p=0;p<bList.length;p++) {
-    bList[p].jiggle();
+    bList[p].jiggle();                        // move blotches
   }
+  
   pop();
-
-  // draw sineCircle
-  sineCircle();
+  sineCircle();                               // draw sineCircle
   pop();
-
-  // overlay for scrolling
-  overlay();
+  overlay();                                  // draw overlay
 }
 
+// using scroll to set diameter, rotation, scale and opacity of overlay
 function mouseWheel(event) {
-  // setting diameter, rotation, scale, and opacity of overlay based on scroll
   diameter = abs(diameter) < maxDiameter ? diameter + event.deltaY/5 : -Math.sign(diameter) * (maxDiameter - 0.01);
   r -= event.deltaX/10;
   s -= s/abs(s) * event.deltaX/20;
   alpha = alpha < 170 ? alpha+3 : 170;
 }
 
+// scale canvas to square
 function scaleCanvas() {
-  // scale canvas to square
   let _width = windowWidth, _height = windowHeight;
   if (_width>_height) _width = _height;
   else _height = _width;
@@ -92,6 +84,7 @@ function scaleCanvas() {
   background(220);
 }
 
+// overlay effect when scrolling
 function overlay() {
   fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
   noStroke();
@@ -99,8 +92,12 @@ function overlay() {
   alpha = alpha > 0 ? (alpha-1)/1.2 : 0;
 
   if (alpha > 0) {
+
+    // overall overlay
     fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
     rect(width*7/8, height*3/4, width/13, height/13*2, 20);
+
+    // bar showing diameter of blotches
     fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
     rect(width*7/8, height*3/4 + width/13, width/13, ((diameter))*width/13/60, 0, 0, 20, 20);
   }
@@ -108,20 +105,19 @@ function overlay() {
 }
 
 function sineCircle() {
+
   push();
 
   sList.push(s);
   if (sList.length > 30) {
-    sList.shift();
+    sList.shift();                            // keep track of scale
   }
-
   scale(sList[0]);
 
-  let radius = width*6/11;
+  let radius = width*6/11;                    // radius of sine circle
 
   fill('#cb2e3114');
-
-  beginShape();
+  beginShape();                               // first sine circle
   for (let i=0; i<=360; i++) {
     let l = radius + radius/11 + 10*sin(i*15 + change);
     let x = l * cos(i);
@@ -129,8 +125,7 @@ function sineCircle() {
     curveVertex(x, y);
   }
   endShape(CLOSE);
-
-  beginShape();
+  beginShape();                              // second sine circle
   for (let i=0; i<=360; i++) {
     let l = radius + 35*sin(i*6 + change*2+180);
     let x = l * cos(i);
@@ -138,8 +133,7 @@ function sineCircle() {
     curveVertex(x, y);
   }
   endShape(CLOSE);
-
-  beginShape();
+  beginShape();                               // third sine circle
   for (let i=0; i<=360; i++) {
     let l = radius + radius/15 + 15*sin(i*9 + change*1.5+120);
     let x = l * cos(i);
@@ -148,7 +142,7 @@ function sineCircle() {
   }
   endShape(CLOSE);
 
-  change += s < 0 ? -1.5 : 1.5;
-
+  change += s < 0 ? -1.5 : 1.5;               // setting scale of sine circle based on 
+                                              // scale of canvas
   pop();
 }
