@@ -5,6 +5,8 @@ let s, sList;                                 // scale of canvas
 let diameter, maxDiameter;                    // diameter of blotches
 let alpha;                                    // opacity of overlay
 let change;                                   // change in sineCircle
+let scrolling;                                // bool to trigger overlay states
+let scrolling2;                               // bool for checking if scrolling
 
 function setup() {
   scaleCanvas();                              // handling canvas size
@@ -32,6 +34,7 @@ function setup() {
   diameter = 27; maxDiameter = 60;
   alpha = 0;
   change = 0;
+  scrolling = false; scrolling2 = false;
 
   // degree mode
   angleMode(DEGREES);
@@ -65,6 +68,7 @@ function draw() {
   sineCircle();                               // draw sineCircle
   pop();
   overlay();                                  // draw overlay
+  scrolling2 = false;                         // reset to confirm if scrolling
 }
 
 // using scroll to set diameter, rotation, scale and opacity of overlay
@@ -72,7 +76,8 @@ function mouseWheel(event) {
   diameter = abs(diameter) < maxDiameter ? diameter + event.deltaY/5 : -Math.sign(diameter) * (maxDiameter - 0.01);
   r -= event.deltaX/10;
   s -= s/abs(s) * event.deltaX/20;
-  alpha = alpha < 170 ? alpha+3 : 170;
+  scrolling = true;
+  scrolling2 = true;
 }
 
 // scale canvas to square
@@ -86,20 +91,30 @@ function scaleCanvas() {
 
 // overlay effect when scrolling
 function overlay() {
+
+  // change opacity of overlay
+  
+  if (scrolling === true) {
+    alpha = alpha < 100 ? alpha+4 : 100;
+  } else {
+    alpha = alpha > 0 ? alpha-4 : 0;
+  }
+  if (alpha === 100 && scrolling2 === false) {
+    scrolling = false;
+  }
+  
+  // overall overlay
   fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
   noStroke();
   rect(0, 0, width, height);
-  alpha = alpha > 0 ? (alpha-1)/1.2 : 0;
 
   if (alpha > 0) {
 
-    // overall overlay
-    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
-    rect(width*7/8, height*3/4, width/13, height/13*2, 20);
-
     // bar showing diameter of blotches
-    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha*3);
-    rect(width*7/8, height*3/4 + width/13, width/13, ((diameter))*width/13/60, 0, 0, 20, 20);
+    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
+    rect(width*7/8, height*3/4, width/13, height/13*2);    
+    fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
+    rect(width*7/8, height*3/4 + width/13, width/13, ((diameter))*width/13/60);
   }
   console.log(alpha);
 }
