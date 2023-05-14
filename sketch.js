@@ -36,7 +36,6 @@ function setup() {
   change = 0;
   scrolling = false; scrolling2 = false;
 
-  // degree mode
   angleMode(DEGREES);
 }
 
@@ -93,7 +92,7 @@ function scaleCanvas() {
 function overlay() {
 
   // change opacity of overlay
-  
+
   if (scrolling === true) {
     alpha = alpha < 100 ? alpha+4 : 100;
   } else {
@@ -116,9 +115,9 @@ function overlay() {
     fill(200, 60-alpha*1.5, 60-alpha*1.5, alpha);
     rect(width*7/8, height*3/4 + width/13, width/13, ((diameter))*width/13/60);
   }
-  console.log(alpha);
 }
 
+// draws sine circles
 function sineCircle() {
 
   push();
